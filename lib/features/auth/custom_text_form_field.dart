@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
     super.key,
     required this.controller,
-    this.maxLines,
+    this.maxLines =1,
     this.validator,
     required this.hintText,
     required this.title,
-    this.suffixIcon,
+    this.obscureText = true,
+     this.suffixIcon,
   });
 
   final TextEditingController controller;
   final String title;
-  final int? maxLines;
+  final int? maxLines ;
   final String? Function(String?)? validator;
   final String hintText;
+  final bool obscureText ;
   final Widget? suffixIcon;
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  
+bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +34,35 @@ class CustomTextFormField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          widget.title,
           style: Theme.of(
             context,
           ).textTheme.displaySmall!.copyWith(fontSize: 16),
         ),
         SizedBox(height: 8),
         TextFormField(
-          maxLines: maxLines,
-          validator: validator,
-          controller: controller,
+          
+          maxLines: widget.maxLines,
+          validator: widget.validator,
+          controller: widget.controller,
           style: Theme.of(
             context,
           ).textTheme.displaySmall!.copyWith(fontSize: 16),
+          obscureText: widget.obscureText && !isPasswordVisible, 
           decoration: InputDecoration(
-            suffix: suffixIcon,
+            suffixIcon: widget.obscureText ?  IconButton(
+                  icon:
+                      isPasswordVisible
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      isPasswordVisible = !isPasswordVisible;
+                    });
+                  },
+                ) : null,
             errorStyle: TextStyle(color: Colors.white),
-            hintText: hintText,
+            hintText: widget.hintText,
           ),
         ),
       ],

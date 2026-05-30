@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isPasswordVisible = false;
+  
 
   TextEditingController emailController = TextEditingController();
 
@@ -51,17 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passWordController,
                 hintText: '*************',
                 title: 'Password',
-                suffixIcon: IconButton(
-                  icon:
-                      isPasswordVisible
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
-                ),
+                obscureText: true,
               ),
               SizedBox(height: 20),
 
