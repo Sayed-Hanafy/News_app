@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/them/light_color.dart';
 
 class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
@@ -61,7 +62,7 @@ bool isPasswordVisible = false;
                     });
                   },
                 ) : null,
-            errorStyle: TextStyle(color: Colors.white),
+            errorStyle: TextStyle(color: LightColor.primary),
             hintText: widget.hintText,
           ),
         ),
