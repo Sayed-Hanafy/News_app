@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateAfterSplash() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     final bool isOnboardingScreen =
         PreferencesManager().getBool('key_onboarding_screen') ?? false;
     final bool isLoggedInScreen =

@@ -1,40 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/core/data_source/remote_data/api_config.dart';
 import 'package:news_app/core/data_source/remote_data/api_services.dart';
+import 'package:news_app/core/enums/request_status_enum.dart';
 import 'package:news_app/features/home/model/news_article_model.dart';
 
 class HomeController extends ChangeNotifier {
-
-  
   HomeController() {
-    callHeadlines();
+    callHeadlines(selectedCategory);
     callEverything();
   }
 
-  bool headlinesLoading = true;
-  bool everythingLoading = true;
-  List<NewsArticleModel> newsArticles = [];
+  RequestStatusEnum everythingStatus = RequestStatusEnum.loading;
+  RequestStatusEnum headlinesStatus = RequestStatusEnum.loading;
+
+  List categories = [
+    "Business",
+    "Entertainment",
+    "General",
+    "Health",
+    "Science",
+    "Sports",
+    "Technology",
+  ];
+  List<NewsArticleModel> newsTopHeadLine = [];
   List<NewsArticleModel> newsEverything = [];
   ApiServices apiServices = ApiServices();
 
   String errorMessage = "";
 
-  callHeadlines() async {
+  String? selectedCategory;
+
+  callHeadlines(String? category) async {
     try {
-      Map<String, dynamic> result = await apiServices.get(
-        ApiConfig.topHeadlines,
-        {"country": "us"},
-      );
+      Map<String, dynamic> result = await apiServices.get(ApiConfig.topHeadlines, {
+        "country": "us",
+        "category": "$category",
+      });
 
-      newsArticles =
-          (result['articles'] as List)
-              .map((e) => NewsArticleModel.fromJson(e))
-              .toList();
+      newsTopHeadLine = (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
 
-      headlinesLoading = false;
+      headlinesStatus = RequestStatusEnum.success;
       errorMessage = "";
     } catch (e) {
-      headlinesLoading = false;
+      headlinesStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
     notifyListeners();
@@ -42,28 +50,23 @@ class HomeController extends ChangeNotifier {
 
   callEverything() async {
     try {
-      Map<String, dynamic> result = await apiServices.get(
-        ApiConfig.everything,
-        {"q": "us"},
-      );
+      Map<String, dynamic> result = await apiServices.get(ApiConfig.everything, {"q": "us"});
 
       newsEverything =
-          (result['articles'] as List)
-              .map((e) => NewsArticleModel.fromJson(e))
-              .toList();
+          (result['articles'] as List).map((e) => NewsArticleModel.fromJson(e)).toList();
 
-      everythingLoading = false;
+      everythingStatus = RequestStatusEnum.success;
       errorMessage = "";
     } catch (e) {
-      everythingLoading = false;
+      everythingStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
     notifyListeners();
   }
 
-  void changeLoading(bool value) {
-    headlinesLoading = value;
-    everythingLoading = value;
+  updateSelectedCategory(String? category) {
+    selectedCategory = category;
+    callHeadlines(selectedCategory);
     notifyListeners();
   }
 }

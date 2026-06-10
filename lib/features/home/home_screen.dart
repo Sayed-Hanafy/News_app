@@ -1,4 +1,8 @@
+
 import 'package:flutter/material.dart';
+import 'package:news_app/features/home/components/category_list.dart';
+import 'package:news_app/features/home/components/top_headline.dart';
+import 'package:news_app/features/home/components/trending_news.dart';
 import 'package:news_app/features/home/home_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -12,25 +16,7 @@ class HomeScreen extends StatelessWidget {
       child: Consumer<HomeController>(
         builder: (context, controller, child) {
           return Scaffold(
-            body: Center(
-              child:
-                  controller.headlinesLoading 
-                      ? CircularProgressIndicator()
-                      : Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: controller.newsEverything.length,
-                              itemBuilder: (context, index) {
-                                return Text(
-                                  controller.newsEverything[index].author,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
+            body: CustomScrollView(slivers: [TrendingNews(), CategoryList(), TopHeadline()]),
           );
         },
       ),
